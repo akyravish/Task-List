@@ -6,7 +6,7 @@ const clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
 const taskInput = document.querySelector('#task');
 
-// Add task function
+//  Add task function
 const addTask = (e) => {
 	if (taskInput.value === '') {
 		alert('Add a task');
@@ -36,9 +36,51 @@ const addTask = (e) => {
 	e.preventDefault();
 };
 
+//  Remove Task Function
+
+const removeTask = (e) => {
+	if (e.target.parentElement.classList.contains('delete-item')) {
+		// remove the whole li element
+		e.target.parentElement.parentElement.remove();
+	}
+};
+
+//  Clear Tasks Function
+
+const clearTasks = () => {
+	//  Clear First child until there is no child
+	while (taskList.firstChild) {
+		taskList.removeChild(taskList.firstChild);
+	}
+};
+
+//  Filter Tasks Function
+
+const filterTask = (e) => {
+	// Get the text value from input
+	const text = e.target.value.toLowerCase();
+	// Get all the li element
+	document.querySelectorAll('.collection-item').forEach((task) => {
+		// Show the text content of li Elements
+		const item = task.firstChild.textContent;
+		// If the given text is in item it will show, otherwise it will not
+		if (item.toLowerCase().indexOf(text) !== -1) {
+			task.style.display = 'block';
+		} else {
+			task.style.display = 'none';
+		}
+	});
+};
+
 const loadEventListeners = () => {
 	// Add task Event
 	form.addEventListener('submit', addTask);
+	// Remove task Event
+	taskList.addEventListener('click', removeTask);
+	// Clear task Event
+	clearBtn.addEventListener('click', clearTasks);
+	// Filter task Event
+	filter.addEventListener('keyup', filterTask);
 };
 
 // Load all Event Listner
