@@ -23,12 +23,12 @@ const checkLS = () => {
 
 // * Creating New Element
 
-const newElement = () => {
+const newElement = (task) => {
 	const li = document.createElement('li');
 	// Create li class
 	li.className = 'collection-item';
 	// create text node and append to li
-	li.appendChild(document.createTextNode(taskInput.value));
+	li.appendChild(document.createTextNode(task));
 
 	// Create new link Element
 	const link = document.createElement('a');
@@ -55,23 +55,7 @@ const storeInLocalStorage = (task) => {
 const getTask = () => {
 	const tasks = checkLS();
 	tasks.forEach((task) => {
-		const li = document.createElement('li');
-		// Create li class
-		li.className = 'collection-item';
-		// create text node and append to li
-		li.appendChild(document.createTextNode(task));
-
-		// Create new link Element
-		const link = document.createElement('a');
-		// Add class to link
-		link.className = 'delete-item secondary-content';
-		// Add icon html
-		link.innerHTML = '<i class="far fa-times-circle"></i>';
-
-		// Append the link to the li element
-		li.appendChild(link);
-		// Append li Element to the ul element
-		taskList.appendChild(li);
+		newElement(task);
 	});
 };
 
@@ -80,7 +64,7 @@ const addTask = (e) => {
 	if (taskInput.value === '') {
 		alert('Add a task');
 	} else {
-		newElement();
+		newElement(taskInput.value);
 		storeInLocalStorage(taskInput.value);
 
 		// clear the Input
