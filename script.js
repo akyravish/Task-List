@@ -6,6 +6,21 @@ const clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
 const taskInput = document.querySelector('#task');
 
+//  checking Tasks list in local storage;
+
+const checkLS = () => {
+	let tasks;
+	// if local storage is empty put tasks to empty array
+	if (localStorage.getItem('tasks') === null) {
+		tasks = [];
+	} else {
+		// if there is value in localStorage then set it to tasks
+		tasks = JSON.parse(localStorage.getItem('tasks'));
+	}
+
+	return tasks;
+};
+
 // Store in local storage function
 const storeInLocalStorage = (task) => {
 	let tasks;
@@ -57,33 +72,33 @@ const getTask = () => {
 const addTask = (e) => {
 	if (taskInput.value === '') {
 		alert('Add a task');
+	} else {
+		// Create <li> Element
+		const li = document.createElement('li');
+		// Create li class
+		li.className = 'collection-item';
+		// create text node and append to li
+		li.appendChild(document.createTextNode(taskInput.value));
+
+		// Create new link Element
+		const link = document.createElement('a');
+		// Add class to link
+		link.className = 'delete-item secondary-content';
+		// Add icon html
+		link.innerHTML = '<i class="far fa-times-circle"></i>';
+
+		// Append the link to the li element
+		li.appendChild(link);
+		// Append li Element to the ul element
+		taskList.appendChild(li);
+
+		// Store in Local Storage
+		storeInLocalStorage(taskInput.value);
+
+		// clear the Input
+		taskInput.value = '';
+		e.preventDefault();
 	}
-
-	// Create <li> Element
-	const li = document.createElement('li');
-	// Create li class
-	li.className = 'collection-item';
-	// create text node and append to li
-	li.appendChild(document.createTextNode(taskInput.value));
-
-	// Create new link Element
-	const link = document.createElement('a');
-	// Add class to link
-	link.className = 'delete-item secondary-content';
-	// Add icon html
-	link.innerHTML = '<i class="far fa-times-circle"></i>';
-
-	// Append the link to the li element
-	li.appendChild(link);
-	// Append li Element to the ul element
-	taskList.appendChild(li);
-
-	// Store in Local Storage
-	storeInLocalStorage(taskInput.value);
-
-	// clear the Input
-	taskInput.value = '';
-	e.preventDefault();
 };
 
 //  Remove the task from Local Storage
