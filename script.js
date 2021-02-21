@@ -21,16 +21,31 @@ const checkLS = () => {
 	return tasks;
 };
 
+// * Creating New Element
+
+const newElement = () => {
+	const li = document.createElement('li');
+	// Create li class
+	li.className = 'collection-item';
+	// create text node and append to li
+	li.appendChild(document.createTextNode(taskInput.value));
+
+	// Create new link Element
+	const link = document.createElement('a');
+	// Add class to link
+	link.className = 'delete-item secondary-content';
+	// Add icon html
+	link.innerHTML = '<i class="far fa-times-circle"></i>';
+
+	// Append the link to the li element
+	li.appendChild(link);
+	// Append li Element to the ul element
+	taskList.appendChild(li);
+};
+
 // Store in local storage function
 const storeInLocalStorage = (task) => {
-	let tasks;
-	// if local storage is empty put tasks to empty array
-	if (localStorage.getItem('tasks') === null) {
-		tasks = [];
-	} else {
-		// if there is value in localStorage then set it to tasks
-		tasks = JSON.parse(localStorage.getItem('tasks'));
-	}
+	const tasks = checkLS();
 	// Set the task value to tasks in local storage
 	tasks.push(task);
 	localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -38,15 +53,7 @@ const storeInLocalStorage = (task) => {
 
 //  Get task from the local storage to show on list
 const getTask = () => {
-	let tasks;
-	// if local storage is empty put tasks to empty array
-	if (localStorage.getItem('tasks') === null) {
-		tasks = [];
-	} else {
-		// if there is value in localStorage then set it to tasks
-		tasks = JSON.parse(localStorage.getItem('tasks'));
-	}
-
+	const tasks = checkLS();
 	tasks.forEach((task) => {
 		const li = document.createElement('li');
 		// Create li class
@@ -73,26 +80,7 @@ const addTask = (e) => {
 	if (taskInput.value === '') {
 		alert('Add a task');
 	} else {
-		// Create <li> Element
-		const li = document.createElement('li');
-		// Create li class
-		li.className = 'collection-item';
-		// create text node and append to li
-		li.appendChild(document.createTextNode(taskInput.value));
-
-		// Create new link Element
-		const link = document.createElement('a');
-		// Add class to link
-		link.className = 'delete-item secondary-content';
-		// Add icon html
-		link.innerHTML = '<i class="far fa-times-circle"></i>';
-
-		// Append the link to the li element
-		li.appendChild(link);
-		// Append li Element to the ul element
-		taskList.appendChild(li);
-
-		// Store in Local Storage
+		newElement();
 		storeInLocalStorage(taskInput.value);
 
 		// clear the Input
@@ -104,14 +92,7 @@ const addTask = (e) => {
 //  Remove the task from Local Storage
 
 const removeTaskFromLS = (item) => {
-	let tasks;
-	// if local storage is empty put tasks to empty array
-	if (localStorage.getItem('tasks') === null) {
-		tasks = [];
-	} else {
-		// if there is value in localStorage then set it to tasks
-		tasks = JSON.parse(localStorage.getItem('tasks'));
-	}
+	const tasks = checkLS();
 
 	tasks.forEach((task, index) => {
 		if (item.textContent === task) {
