@@ -6,6 +6,53 @@ const clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
 const taskInput = document.querySelector('#task');
 
+// Store in local storage function
+const storeInLocalStorage = (task) => {
+	let tasks;
+	// if local storage is empty put tasks to empty array
+	if (localStorage.getItem('tasks') === null) {
+		tasks = [];
+	} else {
+		// if there is value in localStorage then set it to tasks
+		tasks = JSON.parse(localStorage.getItem('tasks'));
+	}
+	// Set the task value to tasks in local storage
+	tasks.push(task);
+	localStorage.setItem('tasks', JSON.stringify(tasks));
+};
+
+//  Get task from the local storage to show on list
+const getTask = () => {
+	let tasks;
+	// if local storage is empty put tasks to empty array
+	if (localStorage.getItem('tasks') === null) {
+		tasks = [];
+	} else {
+		// if there is value in localStorage then set it to tasks
+		tasks = JSON.parse(localStorage.getItem('tasks'));
+	}
+
+	tasks.forEach((task) => {
+		const li = document.createElement('li');
+		// Create li class
+		li.className = 'collection-item';
+		// create text node and append to li
+		li.appendChild(document.createTextNode(task));
+
+		// Create new link Element
+		const link = document.createElement('a');
+		// Add class to link
+		link.className = 'delete-item secondary-content';
+		// Add icon html
+		link.innerHTML = '<i class="far fa-times-circle"></i>';
+
+		// Append the link to the li element
+		li.appendChild(link);
+		// Append li Element to the ul element
+		taskList.appendChild(li);
+	});
+};
+
 //  Add task function
 const addTask = (e) => {
 	if (taskInput.value === '') {
@@ -31,9 +78,33 @@ const addTask = (e) => {
 	// Append li Element to the ul element
 	taskList.appendChild(li);
 
+	// Store in Local Storage
+	storeInLocalStorage(taskInput.value);
+
 	// clear the Input
 	taskInput.value = '';
 	e.preventDefault();
+};
+
+//  Remove the task from Local Storage
+
+const removeTaskFromLS = (item) => {
+	let tasks;
+	// if local storage is empty put tasks to empty array
+	if (localStorage.getItem('tasks') === null) {
+		tasks = [];
+	} else {
+		// if there is value in localStorage then set it to tasks
+		tasks = JSON.parse(localStorage.getItem('tasks'));
+	}
+
+	tasks.forEach((task, index) => {
+		if (item.textContent === task) {
+			tasks.splice(index, 1);
+		}
+	});
+
+	localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 //  Remove Task Function
@@ -43,6 +114,14 @@ const removeTask = (e) => {
 		// remove the whole li element
 		e.target.parentElement.parentElement.remove();
 	}
+
+	removeTaskFromLS(e.target.parentElement.parentElement);
+};
+
+//  Clear Tasks from Local Storage
+
+const clearTasksFromLS = () => {
+	localStorage.clear();
 };
 
 //  Clear Tasks Function
@@ -52,6 +131,8 @@ const clearTasks = () => {
 	while (taskList.firstChild) {
 		taskList.removeChild(taskList.firstChild);
 	}
+
+	clearTasksFromLS();
 };
 
 //  Filter Tasks Function
@@ -73,6 +154,8 @@ const filterTask = (e) => {
 };
 
 const loadEventListeners = () => {
+	// Calling DOM Event
+	document.addEventListener('DOMContentLoaded', getTask);
 	// Add task Event
 	form.addEventListener('submit', addTask);
 	// Remove task Event
